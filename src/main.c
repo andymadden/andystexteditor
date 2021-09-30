@@ -3,18 +3,23 @@
 #include <json-c/json_tokener.h>
 #include "fileio.h"
 #include "app_windows.h"
+#include "app_container.h"
 
 int
 main(int argc,
      char *argv[])
 {
-    struct FileData json_file = read_file("test.json");
-
     gtk_init(&argc, &argv);
 
     struct AppMainWindow mainWindow = create_main_window();
 
-    gtk_text_buffer_set_text(mainWindow.editor_buffer, json_file.buffer, strlen(json_file.buffer));
+    AppGlobal mainApp;
+
+    mainApp.main_window = mainWindow.window;
+    mainApp.editor_buffer = mainWindow.editor_buffer;
+    mainApp.current_file = "";
+
+    set_app(&mainApp);
 
     gtk_main();
 

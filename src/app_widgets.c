@@ -1,4 +1,5 @@
 #include "app_windows.h"
+#include "app_container.h"
 #include "fileio.h"
 
 gboolean
@@ -12,7 +13,9 @@ gboolean
 open_file_chooser(GtkWidget *widget, 
                   gpointer data)
 {
-    GtkWidget *file_select = gtk_file_chooser_dialog_new("Open File", GTK_WINDOW(data), GTK_FILE_CHOOSER_ACTION_OPEN, "Cancel", GTK_RESPONSE_CANCEL, "Open", GTK_RESPONSE_ACCEPT, NULL);
+
+    AppGlobal *global = get_app();
+    GtkWidget *file_select = gtk_file_chooser_dialog_new("Open File", GTK_WINDOW(global->main_window), GTK_FILE_CHOOSER_ACTION_OPEN, "Cancel", GTK_RESPONSE_CANCEL, "Open", GTK_RESPONSE_ACCEPT, NULL);
     if (gtk_dialog_run(GTK_DIALOG(file_select)) == GTK_RESPONSE_ACCEPT)
     {
         char *filename;
@@ -21,15 +24,16 @@ open_file_chooser(GtkWidget *widget,
 
         struct FileData file_data = read_file(filename);
 
-        gtk_text_buffer_set_text(GTK_TEXT_BUFFER(data), file_data.buffer, strlen(file_data.buffer));
-        g_free(filename);
+        gtk_text_buffer_set_text(GTK_TEXT_BUFFER(global->editor_buffer), file_data.buffer, strlen(file_data.buffer));
+
+        global->current_file = filename;
     }
     gtk_widget_destroy(file_select);
     return TRUE;
 }
 
 GtkWidget *
-create_file_menu(GtkWidget *window, GtkTextBuffer *editor_buffer)
+create_file_menu()
 {
     GtkWidget *file_menu = gtk_menu_new();
 
@@ -40,7 +44,7 @@ create_file_menu(GtkWidget *window, GtkTextBuffer *editor_buffer)
     GtkWidget *file_menu_save_as_item = gtk_menu_item_new_with_label("Save As...");
     GtkWidget *file_menu_exit_item = gtk_menu_item_new_with_label("Exit");
     
-    g_signal_connect(file_menu_open_item, "activate", G_CALLBACK(open_file_chooser), editor_buffer);
+    g_signal_connect(file_menu_open_item, "activate", G_CALLBACK(open_file_chooser), NULL);
 
     g_signal_connect(file_menu_exit_item, "activate", G_CALLBACK(gtk_main_quit), NULL);
 
@@ -55,7 +59,7 @@ create_file_menu(GtkWidget *window, GtkTextBuffer *editor_buffer)
 }
 
 GtkWidget *
-create_help_menu(GtkWidget *window, GtkTextBuffer *editor_buffer)
+create_help_menu()
 {
     GtkWidget *help_menu = gtk_menu_new();
 
@@ -69,7 +73,7 @@ create_help_menu(GtkWidget *window, GtkTextBuffer *editor_buffer)
 }
 
 GtkWidget *
-create_menu_bar(GtkWidget *window, GtkTextBuffer *editor_buffer)
+create_menu_bar()
 {
     GtkWidget *menu_bar = gtk_menu_bar_new();
 
@@ -78,8 +82,8 @@ create_menu_bar(GtkWidget *window, GtkTextBuffer *editor_buffer)
     GtkWidget *help_menu_item = gtk_menu_item_new_with_label("Help");
 
     // Menus
-    GtkWidget *file_menu = create_file_menu(window, editor_buffer);
-    GtkWidget *help_menu = create_help_menu(window, editor_buffer);
+    GtkWidget *file_menu = create_file_menu();
+    GtkWidget *help_menu = create_help_menu();
 
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(file_menu_item), file_menu);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(help_menu_item), help_menu);

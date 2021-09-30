@@ -12,18 +12,25 @@ create_main_window()
     GtkWidget *main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 
     GtkWidget *textarea = gtk_text_view_new();
+    gtk_text_view_set_left_margin(GTK_TEXT_VIEW(textarea), 5);
+    gtk_text_view_set_right_margin(GTK_TEXT_VIEW(textarea), 5);
+
+    GtkWidget *scroll_window = gtk_scrolled_window_new(NULL, NULL);
+
+    gtk_container_add(GTK_CONTAINER(scroll_window), textarea);
+    
     GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textarea));
 
     struct AppMainWindow mainWindow;
     mainWindow.window = window;
     mainWindow.editor_buffer = buffer;
 
-    GtkWidget *menu_bar = create_menu_bar(window, buffer);
+    GtkWidget *menu_bar = create_menu_bar();
 
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
     gtk_box_pack_start(GTK_BOX(main_vbox), menu_bar, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(main_vbox), textarea, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(main_vbox), scroll_window, TRUE, TRUE, 0);
 
     gtk_container_add(GTK_CONTAINER(window), main_vbox);
 
