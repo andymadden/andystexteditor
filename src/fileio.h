@@ -19,7 +19,8 @@
  *  @param numbytes the number of char bytes in the file
  *  @param buffer a pointer to the file's character buffer
  */
-struct FileData {
+struct FileData 
+{
     long numbytes;
     char *buffer;
 };
@@ -31,7 +32,8 @@ struct FileData {
  * 
  * @return A FileData struct with the size and content of the given file
  */
-struct FileData read_file(const char *filename);
+struct FileData
+read_file(const char *filename);
 
 /**
  * @brief Writes a character buffer into a file
@@ -41,6 +43,8 @@ struct FileData read_file(const char *filename);
  * 
  * @return Void
  */
-void write_file(const char *filename, const char *buffer);
+void
+write_file(const char *filename,
+           const char *buffer);
 
 #endif

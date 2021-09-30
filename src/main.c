@@ -19,7 +19,7 @@ main(int argc,
     mainApp.editor_buffer = mainWindow.editor_buffer;
     mainApp.current_file = "";
 
-    set_app(&mainApp);
+    set_app_global(&mainApp);
 
     gtk_main();
 

@@ -2,6 +2,7 @@
 #define APP_CONTAINER_H
 
 #include <gtk/gtk.h>
+#include <stdlib.h>
 
 typedef struct AppGlobal {
     GtkWidget *main_window;
@@ -9,12 +10,12 @@ typedef struct AppGlobal {
     char *current_file;
 } AppGlobal;
 
-AppGlobal *app_global;
-
-AppGlobal *
-get_app();
+extern AppGlobal app_global;
 
 void
-set_app(AppGlobal *app);
+set_app_global(AppGlobal *app);
+
+AppGlobal *
+get_app_global();
 
 #endif

@@ -14,7 +14,7 @@ open_file_chooser(GtkWidget *widget,
                   gpointer data)
 {
 
-    AppGlobal *global = get_app();
+    AppGlobal *global = get_app_global();
     GtkWidget *file_select = gtk_file_chooser_dialog_new("Open File", GTK_WINDOW(global->main_window), GTK_FILE_CHOOSER_ACTION_OPEN, "Cancel", GTK_RESPONSE_CANCEL, "Open", GTK_RESPONSE_ACCEPT, NULL);
     if (gtk_dialog_run(GTK_DIALOG(file_select)) == GTK_RESPONSE_ACCEPT)
     {
@@ -26,7 +26,7 @@ open_file_chooser(GtkWidget *widget,
 
         gtk_text_buffer_set_text(GTK_TEXT_BUFFER(global->editor_buffer), file_data.buffer, strlen(file_data.buffer));
 
-        global->current_file = filename;
+        app_global.current_file = filename;
     }
     gtk_widget_destroy(file_select);
     return TRUE;
